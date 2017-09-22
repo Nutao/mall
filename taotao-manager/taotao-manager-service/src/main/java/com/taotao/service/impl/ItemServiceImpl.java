@@ -5,8 +5,10 @@ import com.github.pagehelper.PageInfo;
 import com.taotao.common.pojo.EUDataGridResult;
 import com.taotao.common.pojo.TaotaoResult;
 import com.taotao.common.utils.IDUtils;
+import com.taotao.mapper.TbItemDescMapper;
 import com.taotao.mapper.TbItemMapper;
 import com.taotao.pojo.TbItem;
+import com.taotao.pojo.TbItemDesc;
 import com.taotao.pojo.TbItemExample;
 import com.taotao.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,9 @@ public class ItemServiceImpl implements ItemService {
     //注入TbItem的代理对象TbItemMapper
     @Autowired
     private TbItemMapper itemMapper;
+
+    @Autowired
+    private TbItemDescMapper itemDescMapper;
 
     /***
      * 根据查询商品信息
@@ -64,7 +69,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public TaotaoResult creatItem(TbItem item) {
+    public TaotaoResult creatItem(TbItem item, String desc) throws Exception {
         //item 补全
         // 生成商品ID
         long itemID = IDUtils.genItemId();
@@ -77,6 +82,25 @@ public class ItemServiceImpl implements ItemService {
         item.setUpdated(new Date());
         // 插入到数据库
         itemMapper.insert(item);
+
+        TaotaoResult result = this.insertItemDesc(itemID,desc);
+        if (result.getStatus() != 200){
+            throw new Exception();
+        }
+
+        return TaotaoResult.ok();
+    }
+
+    private TaotaoResult insertItemDesc(long itemID, String desc) {
+        // 创建一个描述对象, 并填充属性的内容
+        TbItemDesc tbItemDesc = new TbItemDesc();
+        tbItemDesc.setItemId(itemID);
+        tbItemDesc.setItemDesc(desc);
+        tbItemDesc.setCreated(new Date());
+        tbItemDesc.setUpdated(new Date());
+        // 执行表的插入, 相当于一个SQL插入
+        itemDescMapper.insert(tbItemDesc);
+
         return TaotaoResult.ok();
     }
 }
