@@ -7,9 +7,8 @@ import com.taotao.common.pojo.TaotaoResult;
 import com.taotao.common.utils.IDUtils;
 import com.taotao.mapper.TbItemDescMapper;
 import com.taotao.mapper.TbItemMapper;
-import com.taotao.pojo.TbItem;
-import com.taotao.pojo.TbItemDesc;
-import com.taotao.pojo.TbItemExample;
+import com.taotao.mapper.TbItemParamItemMapper;
+import com.taotao.pojo.*;
 import com.taotao.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,6 +29,9 @@ public class ItemServiceImpl implements ItemService {
 
     @Autowired
     private TbItemDescMapper itemDescMapper;
+
+    @Autowired
+    private TbItemParamItemMapper tbItemParamItemMapper;
 
     /***
      * 根据查询商品信息
@@ -69,7 +71,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public TaotaoResult creatItem(TbItem item, String desc) throws Exception {
+    public TaotaoResult creatItem(TbItem item, String desc, String itemParam) throws Exception {
         //item 补全
         // 生成商品ID
         long itemID = IDUtils.genItemId();
@@ -83,11 +85,30 @@ public class ItemServiceImpl implements ItemService {
         // 插入到数据库
         itemMapper.insert(item);
 
+        //添加商品描述
         TaotaoResult result = this.insertItemDesc(itemID,desc);
         if (result.getStatus() != 200){
             throw new Exception();
         }
+        // 添加商品规格
+        result = this.insertItemParamItem(itemID, itemParam);
+        if (result.getStatus() != 200){
+            throw new Exception();
+        }
 
+        return TaotaoResult.ok();
+    }
+
+    private TaotaoResult insertItemParamItem(long itemID, String itemParam) {
+        //创建POJO
+        TbItemParamItem tbItemParamItem = new TbItemParamItem();
+        //补全信息
+        tbItemParamItem.setItemId(itemID);
+        tbItemParamItem.setParamData(itemParam);
+        tbItemParamItem.setCreated(new Date());
+        tbItemParamItem.setUpdated(new Date());
+        // 插入到表中
+        tbItemParamItemMapper.insert(tbItemParamItem);
         return TaotaoResult.ok();
     }
 
