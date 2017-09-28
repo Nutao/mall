@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.taotao:taotao-manager-mapper:unknown">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/taotao/taotao-manager-mapper/unknown/taotao-manager-mapper-unknown.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/taotao/taotao-manager-mapper/unknown/taotao-manager-mapper-unknown-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/taotao/taotao-manager-mapper/unknown/taotao-manager-mapper-unknown-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
