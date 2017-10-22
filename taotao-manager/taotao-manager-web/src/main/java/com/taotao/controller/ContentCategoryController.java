@@ -47,4 +47,6 @@ public class ContentCategoryController {
         TaotaoResult result = contentCategoryService.renameContentCategory(id, name);
         return result;
     }
+
+
 }
